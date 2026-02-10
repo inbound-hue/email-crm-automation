@@ -1,0 +1,39 @@
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables & secrets
+.env
+credentials.json
+token_gmail.pickle
+
+# Downloads & generated files
+downloads_from_gmail/
+transcripts_from_gmail/
+transcripts/
+downloads/
+
+# Python libs & binaries
+Lib/
+Scripts/
+
+# IDE
+.idea/
+
+# Media files
+*.mp3
+*.mp4
+*.m4a
+*.wav
+*.ogg
+
+# System files
+*.log
+*.bak
+*.swp
+desktop.ini
+
+
