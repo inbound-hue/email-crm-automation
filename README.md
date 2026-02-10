@@ -6,14 +6,14 @@ This project runs a small Flask web app where you enter an email address, and th
 
 ## 1) Requirements (install these first)
 
-### ✅ Windows
+###  Windows
 - Install **Python 3.11** (recommended)
   - Download: https://www.python.org/downloads/
-  - While installing, tick ✅ “Add Python to PATH”
+  - While installing, tick  “Add Python to PATH”
 - Install **Git**
   - https://git-scm.com/downloads
 
-### ✅ macOS / Linux
+###  macOS / Linux
 - Python 3.11+
 - Git
 
@@ -47,7 +47,7 @@ Then activate again:
 python -m venv .venv
 .\.venv\Scripts\activate.bat
 
-✅ macOS / Linux
+ macOS / Linux
 python3 -m venv .venv
 source .venv/bin/activate
 
@@ -84,7 +84,7 @@ Download credentials.json
 
 Put credentials.json in the project root folder
 
-✅ The project will generate a token file on first login (example: token_gmail.pickle).
+ The project will generate a token file on first login (example: token_gmail.pickle).
 
 First run OAuth login
 
