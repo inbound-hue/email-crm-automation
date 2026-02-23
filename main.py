@@ -1,48 +1,58 @@
 from flask import Flask, render_template, request, redirect, url_for
-from threading import Thread
 import os
+from transcriber import transcribe_file
+from structurer import extract_structured_data
+from hubspot_writer import save_transcript_to_hubspot
+from email_writer import send_email
 
-# Import functions from email_reciever.py
-from email_reciever import process_emails
-
-# Flask app setup
 app = Flask(__name__)
 
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Route for the homepage and form submission
+
 @app.route("/", methods=["GET", "POST"])
 def home():
     if request.method == "POST":
-        target_email = request.form["email"].lower()
+        email = request.form["email"].lower()
+        audio_file = request.files["audio"]
 
-        # Debug print to confirm form submission
-        print(f"Received email: {target_email}")
+        print(f"Received email: {email}")
 
-        # Start the email processing in the background
-        start_email_processing(target_email)  # Run in background
+        if audio_file:
+            file_path = os.path.join(UPLOAD_FOLDER, audio_file.filename)
+            audio_file.save(file_path)
 
-        # Redirect to success page after starting background task
-        return redirect(url_for("success"))
-    return render_template("index.html")  # render the index.html page
+            print(f"Saved audio file: {file_path}")
+
+            # 1️⃣ Transcribe
+            transcript = transcribe_file(file_path)
+            print("Transcription completed")
+
+            # 2️⃣ Extract structured data
+            structured_data = extract_structured_data(transcript)
+            print("Structured data extracted")
+
+            # 3️⃣ Update HubSpot
+            save_transcript_to_hubspot(email, transcript, file_path, structured_data)
+            print("HubSpot updated")
+
+            # 4️⃣ Send confirmation email
+            send_email(email, structured_data.get("appointment_date"))
+            print("Confirmation email sent")
+
+            return redirect(url_for("success"))
+
+    return render_template("index.html")
 
 
-# Route for successful email processing
 @app.route("/success")
 def success():
-    return "Email processing was successful!"
+    return "Audio processed successfully!"
 
 
-# Function to start the email processing in a background thread
-def start_email_processing(target_email):
-    print(f"Starting email processing in background for: {target_email}")  # Debug print
-    thread = Thread(target=process_emails, args=(target_email,))
-    thread.start()
-
-
-# Run the app
 if __name__ == "__main__":
     app.run(debug=True)
-
 
 
 
