@@ -1,30 +1,30 @@
-# email_writer.py
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
 
-def send_email(customer_email: str, appointment_date: str):
+def send_email(customer_email: str, appointment_date: str | None):
     from_email = os.getenv("EMAIL_SENDER")
     password = os.getenv("EMAIL_PASSWORD")
 
     subject = "Appointment Confirmation – Horbach Expat Ease"
 
-    body = f"""
+    if appointment_date:
+        body = f"""
 Dear Customer,
 
-Nice that I could reach you today, I'm Alex from Horbach Expat Ease.
+Nice that I could reach you today.
 
 Here as promised your confirmation for our appointment on {appointment_date}.
-Please note it down in your calendar.
 
-You will receive a Teams link shortly before the meeting and we will be talking
-about the topics I mentioned.
+Warm regards,
+Horbach Team
+"""
+    else:
+        body = """
+Dear Customer,
 
-More details about our services:
-https://horbachexpats.com/our-services/
-
-If you have any questions, do not hesitate to reach out.
+Thank you for your submission. We have received your audio.
 
 Warm regards,
 Horbach Team
@@ -42,4 +42,4 @@ Horbach Team
     server.send_message(msg)
     server.quit()
 
-    print(f" Confirmation email sent to {customer_email}")
+    print(f"Confirmation email sent to {customer_email}")
